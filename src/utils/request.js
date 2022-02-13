@@ -2,14 +2,13 @@ import axios from 'axios'
 
 // 导出基准地址，原因：其他地方不是通过axios发请求的地方用上基准地址
 // 项目的接口地址
-export const baseURL = 'http://ttapi.research.itcast.cn/'
+export const baseURL = 'http://www.liulongbin.top:8000'
 const instance = axios.create({
   // axios 的一些配置，baseURL  timeout
   baseURL,
   // 请求时间
   timeout: 5000
 })
-
 // 请求工具函数
 // 将整个函数直接以文件导出 所以可以直接调文件名使用
 export default (url, method, submitData) => {

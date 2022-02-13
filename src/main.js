@@ -4,6 +4,7 @@ import router from './router'
 import store from './store'
 import Vant from 'vant'
 import 'vant/lib/index.css'
+import './assets/style/index.less'
 // 淘宝rem适配方案
 import 'amfe-flexible'
 

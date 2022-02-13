@@ -1,8 +1,6 @@
 <template>
   <div class="hello">
-    111
-    <!-- 设置badge属性后，会在图标右上角展示相应的徽标 -->
-    <van-icon name="chat-o" badge="2" />
+
   </div>
 </template>
 
