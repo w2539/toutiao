@@ -14,15 +14,14 @@
         name="mobile"
         label="手机号"
         icon-prefix="toutiao"
-        class="toutiao"
-        left-icon="wode"
+        left-icon="shouji"
         clearable
         placeholder="手机号"
         :rules="pattern.mobile"
       />
       <van-field
         icon-prefix="toutiao"
-        left-icon="pinglun"
+        left-icon="yanzhengma"
         v-model="user.code"
         type="number"
         name="code"
