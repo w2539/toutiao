@@ -96,11 +96,11 @@ export default {
       })
       try {
         // 只有当表单数据校验通过之后，才会调用此 login 函数
-        const res = await loginAPI(this.user)
+        const { data } = await loginAPI(this.user)
         // 当数据请求成功之后，res.data 中存储的就是服务器响应回来的数据
-        console.log(res)
         Toast.success('登陆成功')
-        this.$store.commit('setUser', res.data)
+        this.$store.commit('setUser', data.data)
+        this.$router.back()
       } catch (err) {
         Toast.fail('账号或密码错误')
       }
@@ -183,6 +183,9 @@ export default {
         font-size: 15px;
       }
     }
+  }
+  /deep/.van-field__body {
+    margin-right: 20px;
   }
 }
 </style>
