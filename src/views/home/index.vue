@@ -50,6 +50,8 @@
 import { getUserChannels } from '../../api/list'
 import ArticleList from './components/article-list.vue'
 import HomePopup from './home-popup.vue'
+import { mapState } from 'vuex'
+import { getItem } from '../../utils/storage'
 export default {
   data () {
     return {
@@ -61,12 +63,35 @@ export default {
   created () {
     this.gainList()
   },
-  computed: {},
+  computed: {
+    ...mapState(['user'])
+  },
   components: { ArticleList, HomePopup },
   methods: {
     async gainList () {
-      const { data } = await getUserChannels()
-      this.list = data.data
+      let list = []
+      try {
+        if (this.user) {
+          // 以登陆情况
+          const { data } = await getUserChannels()
+          list = data.data
+        } else {
+          const localChannels = getItem('channelList')
+          if (localChannels) {
+            // 有本地频道数据，则使用
+            list = localChannels
+          } else {
+            // 没有本地频道数据，则请求获取默认推荐的频道列表
+            const { data } = await getUserChannels()
+            list = data.data
+          }
+        }
+      } catch (err) {
+        console.log(err)
+        this.$toast('数据获取失败')
+      }
+
+      this.list = list
     },
     cutRecommend (index) {
       this.active = index

@@ -19,7 +19,7 @@
         :key="item.id"
         :icon="iconCloseShow && index !== 0 ? 'close' : ''"
         :text="item.name"
-        @click="userRecommend(index)"
+        @click="userRecommend(index, item)"
       />
     </van-grid>
     <van-cell
@@ -40,7 +40,13 @@
 </template>
 
 <script>
-import { getAllChannels } from '../../api/list'
+import {
+  getAllChannels,
+  getNewUserChannels,
+  deleteUserChannels
+} from '../../api/list'
+import { mapState } from 'vuex'
+import { setItem } from '../../utils/storage'
 export default {
   name: 'ChannelEdit',
   components: {},
@@ -75,23 +81,43 @@ export default {
       }
     },
     // 增加用户推荐频道
-    addRecommend (item) {
-      this.channelList.push(item)
+    async addRecommend (item) {
+      this.channelList.channels.push(item)
+      if (this.user) {
+        // 登陆下
+        // 已登录，数据存储到线上
+        await getNewUserChannels([
+          {
+            id: item.id, // 频道 id
+            seq: this.channelList.length // 频道的 序号
+          }
+        ])
+      } else {
+        // 未登录下
+        setItem('channelList', this.channelList.channels)
+      }
     },
-    userRecommend (index) {
+    userRecommend (index, item) {
       if (this.iconCloseShow && index !== 0) {
         if (index <= this.active) {
           this.$emit('cutRecommend', this.active - 1)
         }
         // 删除
-        this.deleteChannel(index)
+        this.deleteChannel(index, item)
       } else {
         // 切换
         this.cutChannel(index)
       }
     },
-    deleteChannel (index) {
+    async deleteChannel (index, item) {
       this.channelList.channels.splice(index, 1)
+      if (this.user) {
+        // 登陆状态下
+        await deleteUserChannels(item.id)
+      } else {
+        // 未登录情况下
+        setItem('deleteChannel', this.channelList.channels)
+      }
     },
     cutChannel (index) {
       this.$emit('cutRecommend', index)
@@ -99,6 +125,7 @@ export default {
     }
   },
   computed: {
+    ...mapState(['user']),
     allRecommend () {
       // 1. 对数组进行 filter 过滤，返回的是符合条件的新数组
       return this.allChannel.filter((item) => {
