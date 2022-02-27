@@ -11,31 +11,45 @@
         show-action
         background="#3296fa"
         placeholder="请输入搜索关键词"
-        @search="onSearch"
+        @search="onSearch(value)"
         @cancel="$router.back()"
       >
       </van-search>
     </form>
     <!-- 搜索结果 -->
-    <SearchResult :q="value" v-if="isResultShow"></SearchResult>
+    <SearchResult
+      :value="value"
+      v-if="isResultShow && value !== ''"
+    ></SearchResult>
 
     <!-- 搜索联想模块 -->
-    <SearchAssociate v-else-if="value" :value="value"></SearchAssociate>
+    <SearchAssociate
+      v-else-if="value"
+      :value="value"
+      @associate="onSearch"
+    ></SearchAssociate>
 
     <!-- 搜索历史 -->
-    <SearchHistory v-else></SearchHistory>
+    <SearchHistory
+      v-if="value === ''"
+      :searchHistories="searchHistories"
+      @search-history="searchHistories = []"
+      @associate="onSearch"
+    ></SearchHistory>
   </div>
 </template>
 <script>
 import SearchAssociate from './components/search-associate.vue'
 import SearchHistory from './components/search-history.vue'
 import SearchResult from './components/search-result.vue'
+import { setItem, getItem } from '../../utils/storage'
 export default {
   name: 'search',
   data () {
     return {
       value: '',
-      isResultShow: false
+      isResultShow: false,
+      searchHistories: getItem('serach-histories') || []
     }
   },
   created () {},
@@ -43,7 +57,24 @@ export default {
   components: { SearchAssociate, SearchHistory, SearchResult },
   methods: {
     onSearch (val) {
+      this.searchText = val
+
+      // 存储搜索历史记录
+      // 要求：不要有重复历史记录、最新的排在最前面
+      const index = this.searchHistories.indexOf(val)
+      if (index !== -1) {
+        this.searchHistories.splice(index, 1)
+      }
+      this.searchHistories.unshift(val)
+
+      // 渲染搜索结果
       this.isResultShow = true
+    }
+  },
+  watch: {
+    searchHistories (val) {
+      // 同步到本地存储
+      setItem('serach-histories', val)
     }
   }
 }

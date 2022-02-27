@@ -5,6 +5,7 @@
       icon="search"
       v-for="(items, index) in associate"
       :key="index"
+      @click="$emit('associate', items)"
     >
       <div slot="title" v-html="highlight(items, value)"></div>
     </van-cell>
@@ -44,7 +45,7 @@ export default {
         const { data } = await getSearchAssociate(this.value)
         // 传给双向绑定的值
         this.associate = data.data.options
-      }, 1000),
+      }, 500),
       immediate: true
     }
   }

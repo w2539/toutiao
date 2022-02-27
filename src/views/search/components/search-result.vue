@@ -1,18 +1,13 @@
 <template>
-  <div class="search-result">
-    <van-list
-      v-model="loading"
-      :finished="finished"
-      finished-text="没有更多了"
-      @load="onLoad"
-    >
-      <van-cell
-        v-for="(item, index) in result"
-        :key="index"
-        :title="item.title"
-      />
-    </van-list>
-  </div>
+  <van-list
+    class="search-result"
+    v-model="loading"
+    :finished="finished"
+    finished-text="没有更多了"
+    @load="onLoad"
+  >
+    <van-cell v-for="item in result" :key="item.id" :title="item.title" />
+  </van-list>
 </template>
 <script>
 import { getSearchResult } from '../../../api/search'
@@ -44,14 +39,14 @@ export default {
         page: this.page,
         parPage: this.parPage
       })
-      const { result } = data.data
-      console.log(result)
+      const { results } = data.data
+      console.log()
       // 接受获取的接口数据
-      this.result.push(...result)
+      this.result.push(...results)
       // loading 变为 false
       this.loading = false
       // 判断有无数据  没有数据变为true
-      if (result.length) {
+      if (results.length) {
         this.page++
       } else {
         this.finished = true
