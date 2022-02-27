@@ -4,6 +4,7 @@
       <!-- 导航栏开始 -->
       <van-nav-bar class="app-nav-bar">
         <van-button
+          @click="$router.push('/search')"
           slot="title"
           class="search-btn"
           icon="search"
@@ -49,7 +50,7 @@
 <script>
 import { getUserChannels } from '../../api/list'
 import ArticleList from './components/article-list.vue'
-import HomePopup from './home-popup.vue'
+import HomePopup from './components/home-popup.vue'
 import { mapState } from 'vuex'
 import { getItem } from '../../utils/storage'
 export default {
