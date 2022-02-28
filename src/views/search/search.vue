@@ -34,7 +34,7 @@
       v-if="value === ''"
       :searchHistories="searchHistories"
       @search-history="searchHistories = []"
-      @associate="onSearch"
+      @search-historys="onSearch"
     ></SearchHistory>
   </div>
 </template>
@@ -57,7 +57,7 @@ export default {
   components: { SearchAssociate, SearchHistory, SearchResult },
   methods: {
     onSearch (val) {
-      this.searchText = val
+      this.value = val
 
       // 存储搜索历史记录
       // 要求：不要有重复历史记录、最新的排在最前面

@@ -42,7 +42,7 @@ export default {
         return this.searchHistories.splice(index, 1)
       }
       // 否则执行搜索操作
-      this.$emit('associate', items)
+      this.$emit('search-historys', items)
     }
   }
 }
