@@ -1,6 +1,13 @@
 <template>
   <div class="article">
-    <van-cell>
+    <van-cell
+      :to="{
+        name: 'article',
+        params: {
+          articleId: article.art_id
+        }
+      }"
+    >
       <div class="title" slot="title">{{ article.title }}</div>
       <div slot="label">
         <div v-if="article.cover.type === 3" class="cover-wrap">
