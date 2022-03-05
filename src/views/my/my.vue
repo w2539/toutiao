@@ -160,8 +160,7 @@ export default {
     height: 115px;
     box-sizing: border-box;
     &-user {
-      padding-top: 38px;
-      padding: 38px 11px;
+      margin-top: 8px;
       width: 66px;
       height: 66px;
       margin-right: 11px;
@@ -170,7 +169,8 @@ export default {
       }
     }
     &-name {
-      font-size: 15px;
+      padding-left: 10px;
+      font-size: 16px;
       color: #fff;
     }
     &-btn {

@@ -52,10 +52,15 @@
     ></div>
     <!-- 底部区域 -->
     <div class="article-bottom">
-      <van-button round type="default" class="button-bottom"
-        >点击评论</van-button
+      <van-button
+        round
+        type="default"
+        class="button-bottom"
+        @click="isCommentPost = true"
       >
-      <van-icon name="comment-o" info="123" color="#777" />
+        点击评论
+      </van-button>
+      <van-icon name="comment-o" :info="CommenttotalCount" color="#777" />
       <!-- 收藏按钮 -->
       <van-icon
         @click="collectionArticles"
@@ -70,6 +75,22 @@
       />
       <van-icon name="share" color="#777777"></van-icon>
     </div>
+
+    <!-- 分割线 -->
+    <van-divider class="comment-divider"> 正文结束 </van-divider>
+
+    <!-- 底部评论区域 -->
+    <CommentList
+      :list="articleList"
+      @update-totalCount="CommenttotalCount = $event"
+    ></CommentList>
+    <!-- 发布评论 -->
+    <van-popup v-model="isCommentPost" position="bottom">
+      <CommentPost
+        @addComment="addComment"
+        :autId="articlesParticulars"
+      ></CommentPost>
+    </van-popup>
   </div>
 </template>
 <script>
@@ -85,19 +106,23 @@ import {
   collectionArticles,
   cancelCollectionArticles
 } from '../../api/article.js'
-
+import CommentList from './components/comment-list.vue'
+import CommentPost from './components/comment-post.vue'
 export default {
   data () {
     return {
       articlesParticulars: [],
-      isFollowLoading: false
+      isFollowLoading: false,
+      isCommentPost: false,
+      articleList: [],
+      CommenttotalCount: ''
     }
   },
   created () {
     this.isArticlesParticulars()
   },
   computed: {},
-  components: {},
+  components: { CommentList, CommentPost },
   methods: {
     // 获取文章详情
     async isArticlesParticulars () {
@@ -158,8 +183,8 @@ export default {
         this.articlesParticulars.is_followed =
           !this.articlesParticulars.is_followed
       } catch (err) {
-        console.log(err)
-        this.$toast.fail('操作失败')
+        console.log(err.response.data.message)
+        this.$toast.fail(err.response.data.message)
       }
 
       // 关闭按钮的 loading 状态
@@ -220,28 +245,50 @@ export default {
       } catch (err) {
         this.$toast.fail('操作失败')
       }
+    },
+    addComment (commentPost) {
+      const data = commentPost.data.new_obj
+      this.articleList.unshift(data)
+      this.isCommentPost = false
+      this.CommenttotalCount++
+      console.log(data)
     }
   }
 }
 </script>
 <style lang="less" scoped>
 .article {
+  /deep/.van-divider {
+    color: '#1989fa';
+    margin-top: -20px;
+    padding-bottom: 20px;
+  }
+  /deep/.van-popup {
+    height: 100px;
+  }
   .article-bottom {
     position: fixed;
-    bottom: 0px;
+    left: 0;
+    right: 0;
+    bottom: 0;
     display: flex;
     justify-content: space-around;
     align-items: center;
-    border-top: 0.2px solid #fff;
-    width: 100%;
-    height: 45px;
+    box-sizing: border-box;
+    height: 44px;
+    border-top: 1px solid #d8d8d8;
     background-color: #fff;
+    margin-top: 20px;
     .button-bottom {
       height: 35px;
       width: 100px;
     }
+    .van-icon {
+      font-size: 21px;
+    }
   }
   .markdown-body {
+    margin-bottom: 20px;
     padding: 14px;
   }
   /deep/.van-cell__title {
