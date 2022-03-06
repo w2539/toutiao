@@ -25,7 +25,16 @@
 import { addComment } from '../../../api/comment'
 export default {
   name: 'comment-post',
-  props: {},
+  props: {
+    target: {
+      type: [Number, String, Object],
+      require: true
+    },
+    articleId: {
+      type: [Number, String, Object],
+      default: null
+    }
+  },
   data () {
     return {
       message: ''
@@ -37,11 +46,14 @@ export default {
   methods: {
     async addComment () {
       const { data } = await addComment({
-        target: this.$route.params.articleId.toString(),
-        content: this.message
+        target: this.target,
+        content: this.message,
+        art_id: this.articleId ? this.articleId.toString() : null
       })
       this.$emit('addComment', data)
       this.message = ''
+      // 提示用户成功
+      this.$toast.success('发布成功！')
     }
   }
 }

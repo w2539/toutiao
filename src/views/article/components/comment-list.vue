@@ -19,6 +19,7 @@
         v-for="items in list"
         :key="items.id"
         :comment="items"
+        @replyClick="$emit('replyClick', $event)"
       ></ToutiaoComment>
     </van-list>
   </div>
@@ -31,6 +32,14 @@ export default {
     list: {
       type: Array,
       default: () => []
+    },
+    type: {
+      type: String,
+      default: 'a'
+    },
+    source: {
+      type: [String, Array, Object],
+      require: true
     }
   },
   data () {
@@ -51,8 +60,8 @@ export default {
     async onLoad () {
       // 1.通过接口获取数据
       const { data } = await getComment({
-        type: 'a', // 评论类型，a-对文章(article)的评论，c-对评论(comment)的回复
-        source: this.$route.params.articleId, // 源id，文章id或评论id
+        type: this.type, // 评论类型，a-对文章(article)的评论，c-对评论(comment)的回复
+        source: this.source, // 源id，文章id或评论id
         offset: this.articleComment.offset, // 获取评论数据的偏移量，值为评论id，表示从此id的数据向后取，不传表示从第一页开始读取数据
         limit: 10 // 每页大小
       })

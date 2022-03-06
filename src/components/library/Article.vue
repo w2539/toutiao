@@ -99,7 +99,7 @@ export default {
       }
       .cover-image {
         width: 100%;
-        height: 73px;
+        height: 73px !important;
       }
     }
   }

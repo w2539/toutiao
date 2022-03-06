@@ -13,7 +13,12 @@
       <div class="body-details">{{ comment.content }}</div>
       <div class="body-bottom">
         <span class="body-bottom-time">{{ comment.pubdate }}</span>
-        <van-button class="body-bottom-button" round size="mini">
+        <van-button
+          class="body-bottom-button"
+          round
+          size="mini"
+          @click="$emit('replyClick', comment)"
+        >
           {{ comment.reply_count }}回复
         </van-button>
       </div>
@@ -78,6 +83,7 @@ export default {
 </script>
 <style lang="less" scoped>
 .comment {
+
   &-icon {
     margin-right: 30px;
   }
@@ -89,15 +95,17 @@ export default {
       color: #406599;
     }
     .body-details {
+      width: 250px;
       font-size: 21px !important;
       margin-top: 5px;
       margin-bottom: 5px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      -o-text-overflow: ellipsis;
-      -webkit-text-overflow: ellipsis;
-      -moz-text-overflow: ellipsis;
-      white-space: nowrap;
+      word-wrap:break-word;
+      // overflow: hidden;
+      // text-overflow: ellipsis;
+      // -o-text-overflow: ellipsis;
+      // -webkit-text-overflow: ellipsis;
+      // -moz-text-overflow: ellipsis;
+      // white-space: nowrap;
     }
     .body-bottom {
       display: flex;

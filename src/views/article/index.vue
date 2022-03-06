@@ -81,15 +81,28 @@
 
     <!-- 底部评论区域 -->
     <CommentList
+      :source="$route.params.articleId"
       :list="articleList"
       @update-totalCount="CommenttotalCount = $event"
+      @replyClick="onReplyClick"
     ></CommentList>
     <!-- 发布评论 -->
     <van-popup v-model="isCommentPost" position="bottom">
       <CommentPost
+        :target="this.$route.params.articleId"
         @addComment="addComment"
         :autId="articlesParticulars"
       ></CommentPost>
+    </van-popup>
+
+    <!-- 评论回复 -->
+    <van-popup v-model="isReplyShow" position="bottom" class="replayPopup">
+      <CommentReply
+        v-if="isReplyShow"
+        :replayComment="replayComment"
+        :autId="articlesParticulars"
+        @crossClick="isReplyShow = false"
+      ></CommentReply>
     </van-popup>
   </div>
 </template>
@@ -108,6 +121,7 @@ import {
 } from '../../api/article.js'
 import CommentList from './components/comment-list.vue'
 import CommentPost from './components/comment-post.vue'
+import CommentReply from './components/comment-reply.vue'
 export default {
   data () {
     return {
@@ -115,14 +129,16 @@ export default {
       isFollowLoading: false,
       isCommentPost: false,
       articleList: [],
-      CommenttotalCount: ''
+      CommenttotalCount: '',
+      isReplyShow: false,
+      replayComment: {}
     }
   },
   created () {
     this.isArticlesParticulars()
   },
   computed: {},
-  components: { CommentList, CommentPost },
+  components: { CommentList, CommentPost, CommentReply },
   methods: {
     // 获取文章详情
     async isArticlesParticulars () {
@@ -246,12 +262,22 @@ export default {
         this.$toast.fail('操作失败')
       }
     },
+    // 发布评论
     addComment (commentPost) {
       const data = commentPost.data.new_obj
+      // 将发布的评论插入历史评论中
       this.articleList.unshift(data)
+      // 关闭弹窗
       this.isCommentPost = false
+      // 增加评论数量
       this.CommenttotalCount++
       console.log(data)
+    },
+    // 回复
+    onReplyClick (comment) {
+      this.isReplyShow = true
+      // 获得要回复的对象
+      this.replayComment = comment
     }
   }
 }
@@ -266,6 +292,10 @@ export default {
   /deep/.van-popup {
     height: 100px;
   }
+  .replayPopup {
+    height: 600px;
+  }
+
   .article-bottom {
     position: fixed;
     left: 0;
