@@ -11,7 +11,7 @@
           :src="userInfo.photo"
         />
         <div slot="title" class="base-info-name">{{ userInfo.name }}</div>
-        <van-button size="small" round class="base-info-btn"
+        <van-button size="small" round class="base-info-btn" to="/user"
           >编辑资料</van-button
         >
       </van-cell>

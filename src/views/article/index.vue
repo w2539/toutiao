@@ -1,7 +1,11 @@
 <template>
   <div class="article">
     <!-- 顶部 -->
-    <van-nav-bar class="article-top" title="文章详情" left-arrow> </van-nav-bar>
+    <van-nav-bar class="article-top" title="文章详情">
+      <template #left>
+        <van-icon name="arrow-left" size="18" @click="$router.back()" />
+      </template>
+    </van-nav-bar>
     <van-cell>
       <div slot="title" class="article-title">
         <h1>iOS原生混合RN开发最佳实践</h1>

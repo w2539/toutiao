@@ -1,6 +1,10 @@
 <template>
   <div class="comment-reply">
-    <van-nav-bar :title="`${replayComment.reply_count}条回复`">
+    <van-nav-bar
+      z-index="-99"
+      safe-area-inset-top
+      :title="`${replayComment.reply_count}条回复`"
+    >
       <van-icon @click="$emit('crossClick')" name="cross" slot="left" />
     </van-nav-bar>
     <ToutiaoComment :comment="replayComment"></ToutiaoComment>
@@ -18,13 +22,13 @@
         round
         type="default"
         class="button-bottom"
-        @click="isCommentPost = true"
+        @click="isCommentReply = true"
       >
         点击评论
       </van-button>
 
       <!-- 发布评论 -->
-      <van-popup v-model="isCommentPost" position="bottom">
+      <van-popup v-model="isCommentReply" position="bottom" class="replyPopup">
         <CommentPost
           @addComment="addComment"
           :articleId="this.$route.params.articleId"
@@ -41,7 +45,7 @@ import CommentList from './comment-list.vue'
 export default {
   data () {
     return {
-      isCommentPost: false,
+      isCommentReply: false,
       replayList: []
     }
   },
@@ -71,6 +75,9 @@ export default {
 </script>
 <style lang="less" scoped>
 .comment-reply {
+  .replyPopup {
+    height: 50%;
+  }
   .article-bottom {
     position: fixed;
     left: 0;
@@ -82,7 +89,7 @@ export default {
     box-sizing: border-box;
     height: 44px;
     border-top: 1px solid #d8d8d8;
-    background-color: #fff;
+    // background-color: #fff;
     margin-top: 20px;
     .button-bottom {
       height: 35px;
