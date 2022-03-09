@@ -113,11 +113,14 @@
     <!-- 图片预览弹出层 -->
     <van-popup
       v-model="isChangePhoto"
+      class="userPhoto"
       :style="{ height: '100%', width: '100%' }"
     >
       <UserChangePhoto
-        :image="prewiewImage"
-        @close="isChangePhoto = false"
+        v-if="isChangePhoto"
+        :file="prewiewImage"
+        @close="changePhotoClose"
+        @update-photo="onClickRight"
       ></UserChangePhoto>
     </van-popup>
   </div>
@@ -178,22 +181,34 @@ export default {
         this.$toast.fail(err.response.data.message)
       }
     },
+    // 上传图片文件发生改变
     onChangeFile () {
       // 打开弹出层
       this.isChangePhoto = true
       // 获得上传的图片 进行图片预览
-      const bol = window.URL.createObjectURL(this.$refs.file.files[0])
-      this.prewiewImage = bol
-      console.log(bol)
+      const file = this.$refs.file.files[0]
+      // const bol = window.URL.createObjectURL(this.$refs.file.files[0])
+      this.prewiewImage = file
+      // console.log(bol)
       // 清空文件上传的内容 防止上传相同的内容之后
       // 没有反应
       this.$refs.file.value = ''
+    },
+    changePhotoClose () {
+      this.isChangePhoto = false
+      this.prewiewImage = ''
+    },
+    onClickRight (file) {
+      this.userInfo.photo = file
     }
   }
 }
 </script>
 <style lang="less" scoped>
 .user {
+  .userPhoto {
+    background-color: #000;
+  }
   /deep/.van-nav-bar__content {
     .van-nav-bar__right {
       color: white !important;

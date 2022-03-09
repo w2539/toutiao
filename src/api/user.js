@@ -14,3 +14,11 @@ export const changeUserInfo = (data) => {
     data
   })
 }
+
+export const changeUserPhoto = (data) => {
+  return request({
+    method: 'PATCH',
+    url: '/v1_0/user/photo',
+    data
+  })
+}
