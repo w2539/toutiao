@@ -3,11 +3,11 @@
     <van-nav-bar title="小智同学" left-arrow @click-left="$router.back()" />
 
     <!-- 聊天主体区域 -->
-    <div class="chat-list" ref="list">
-      <div v-for="(item, index) in list" :key="index">
+    <div class="chat-list">
+      <div v-for="(item, index) in list" :key="index" id="list-message">
         <!-- 左侧是机器人小思 -->
         <div class="chat-item left" v-if="item.name === 'xs'">
-          <div class="chat-pao">{{ item.msg }}</div>
+          <div class="chat-pao">{{ item.listMessage }}</div>
           <van-image
             fit="cover"
             round
@@ -17,7 +17,7 @@
 
         <!-- 右侧是当前用户 -->
         <div class="chat-item right" v-if="item.name === 'me'">
-          <div class="chat-pao">{{ item.msg }}</div>
+          <div class="chat-pao">{{ item.listMessage }}</div>
           <van-image
             fit="cover"
             round
@@ -64,15 +64,15 @@ export default {
 
     // 当客户端与服务器建立连接成功，触发 connect 事件
     socket.on('connect', () => {
-      console.log('建立连接成功！')
+      // console.log('建立连接成功！')
     })
 
     // 监听接收服务端消息
     socket.on('message', (data) => {
-      console.log('收到服务器消息：', data)
-      this.list.push({ name: 'xs', msg: data })
+      // console.log('收到服务器消息：', data)
+      this.list.push({ name: 'xs', listMessage: data })
       this.list.push({
-        message: data.msg,
+        message: data.listMessage,
         isMe: false,
         photo: 'http://toutiao.meiduo.site/FkBUsGwtrHKjoF0NPLzeilckol1-'
       })
@@ -105,14 +105,13 @@ export default {
       // 向服务器发送消息
       this.socket.emit('send', this.message)
       // 将用户填写的消息存储到 list 数组中
-      this.list.push({ name: 'me', msg: this.message })
+      this.list.push({ name: 'me', listMessage: this.message })
       // 清空文本框中的消息内容
       this.message = ''
     },
     scrollToBottom () {
-      const list = this.$ref.list
-      // 元素距顶部距离 =  元素的高度
-      list.scrollTop = list.scrollHeight
+      const listMessage = document.getElementById('list-message') // 获取对象
+      listMessage.scrollTop = listMessage.scrollHeight // 滚动高度
     }
   },
   beforeDestroy () {
@@ -129,6 +128,8 @@ export default {
   .chat-list {
     height: 100%;
     overflow-y: scroll;
+    overflow: auto;
+    margin-bottom: 40px;
     .chat-item {
       position: relative;
       padding: 10px;
