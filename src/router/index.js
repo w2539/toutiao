@@ -50,6 +50,11 @@ const routes = [
     path: '/user',
     name: 'user',
     component: () => import('@/views/user/index.vue')
+  },
+  {
+    path: '/websocket',
+    name: 'websocket',
+    component: () => import('../views/websocket/index.vue')
   }
 ]
 
