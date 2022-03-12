@@ -102,7 +102,11 @@ export default {
         this.$store.commit('setUser', data.data)
         // 清除 layout 的 缓存 让他重新渲染
         this.$store.commit('removeCachePage', 'LayoutIndex')
-        this.$router.back()
+        // this.$router.back()
+        // 返回来源页
+        // 跳转到返回页 或者跳转到首页
+        const redirect = this.$route.query.redirect || '/'
+        this.$router.push(redirect)
       } catch (err) {
         Toast.fail('账号或密码错误')
       }
