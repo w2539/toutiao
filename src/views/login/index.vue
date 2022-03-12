@@ -100,6 +100,8 @@ export default {
         // 当数据请求成功之后，res.data 中存储的就是服务器响应回来的数据
         Toast.success('登陆成功')
         this.$store.commit('setUser', data.data)
+        // 清除 layout 的 缓存 让他重新渲染
+        this.$store.commit('removeCachePage', 'LayoutIndex')
         this.$router.back()
       } catch (err) {
         Toast.fail('账号或密码错误')

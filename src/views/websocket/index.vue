@@ -3,8 +3,8 @@
     <van-nav-bar title="小智同学" left-arrow @click-left="$router.back()" />
 
     <!-- 聊天主体区域 -->
-    <div class="chat-list">
-      <div v-for="(item, index) in list" :key="index" id="list-message">
+    <div class="chat-list" ref="listMessage">
+      <div v-for="(item, index) in list" :key="index">
         <!-- 左侧是机器人小思 -->
         <div class="chat-item left" v-if="item.name === 'xs'">
           <div class="chat-pao">{{ item.listMessage }}</div>
@@ -85,13 +85,14 @@ export default {
       // 在操作完数据后 视图不会直接刷新 拿不到要操作的dom
       // nextTick 是将拿dom的操作放到视图下次刷新后
       this.$nextTick(() => {
-        this.scrollToBottom()
+        this.$refs.listMessage.scrollTop = this.$refs.listMessage.scrollHeight
       })
     }
   },
-  mounted () {
-    // 防止历史记录过多 直接加载到最低部
-    this.scrollToBottom()
+  mount () {
+    this.$nextTick(() => {
+      this.$refs.listMessage.scrollTop = this.$refs.listMessage.scrollHeight
+    })
   },
   computed: {},
   components: {},
@@ -109,10 +110,7 @@ export default {
       // 清空文本框中的消息内容
       this.message = ''
     },
-    scrollToBottom () {
-      const listMessage = document.getElementById('list-message') // 获取对象
-      listMessage.scrollTop = listMessage.scrollHeight // 滚动高度
-    }
+    scrollToBottom () {}
   },
   beforeDestroy () {
     // 关闭连接
@@ -128,7 +126,6 @@ export default {
   .chat-list {
     height: 100%;
     overflow-y: scroll;
-    overflow: auto;
     margin-bottom: 40px;
     .chat-item {
       position: relative;

@@ -8,7 +8,7 @@
     </van-nav-bar>
     <van-cell>
       <div slot="title" class="article-title">
-        <h1>iOS原生混合RN开发最佳实践</h1>
+        <h1>{{ articlesParticulars.title }}</h1>
       </div>
     </van-cell>
 
